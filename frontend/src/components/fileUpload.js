@@ -4,6 +4,7 @@ import axios from 'axios';
 
 function FileUpload() {
     const [selectedFile, setSelectedFile] = useState(null);
+    const [newImage, setNewImage] = useState(null);
 
     const handleFileChange = e => {
         if(e.target.files) {
@@ -13,7 +14,7 @@ function FileUpload() {
 
     function handleUpload(){
         const formData = new FormData();
-        formData.append("myFile", selectedFile);
+        formData.append("document", selectedFile);
     
         axios({
             method: "post",
@@ -27,7 +28,6 @@ function FileUpload() {
             .catch(function (error) {
                 console.log(error)
             });
-    
     }
 
     return (
