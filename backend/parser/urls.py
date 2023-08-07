@@ -17,12 +17,13 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
-from bank_statement.views import front
+from django.urls import path, re_path
+from bank_statement.views import render_react, save_image
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("", front, name="front"),
+    path("", render_react, name="react"),
+    path('image', save_image, name='image'),
 ]
 
 if settings.DEBUG:

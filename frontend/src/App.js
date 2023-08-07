@@ -1,13 +1,13 @@
 import './App.css';
+import FileUpload from './components/fileUpload';
 
 function App() {
+
   return (
     <div className="App">
       <header className="App-header">
-        <p>
-          Hello this is Soup
-        </p>
       </header>
+      <FileUpload />
     </div>
   );
 }

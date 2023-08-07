@@ -1,28 +1,46 @@
 import React from 'react';
-import { ChangeEvent, useState } from 'react';
+import { useState } from 'react';
+import axios from 'axios';
 
-function fileUpload() {
-    const [file, setFile] = useState(null);
-    const [errors, setErrors] = useState(null);
+function FileUpload() {
+    const [selectedFile, setSelectedFile] = useState(null);
 
     const handleFileChange = e => {
         if(e.target.files) {
-            setFile(e.target.files[0]);
+            setSelectedFile(e.target.files[0]);
         }
     };
 
-    const handleUploadClick = () => {
-        if(!file) return;
+    function handleUpload(){
+        const formData = new FormData();
+        formData.append("myFile", selectedFile);
+    
+        axios({
+            method: "post",
+            url: "/image",
+            data: formData,
+            headers: {"Content-Type": "multipart/form-data"},
+        })
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
+    
     }
 
     return (
         <div>
-            <input type="file" accept="pdf" onChange={handleFileChange} />
-            <div>{file && `${file.name}`}</div>
-            <button onClick={handleUploadClick}>Upload</button>
+            <form>
+            <input type="file" accept=".pdf, image/*" onChange={handleFileChange} />
+            <div>{selectedFile && `${selectedFile.name}`}</div>
+            <button onClick={handleUpload}>Upload</button>
+            </form>
         </div>
 
     );
 }
 
-export default fileUpload;
+
+export default FileUpload;
