@@ -130,7 +130,7 @@ CORS_ORIGIN_WHITELIST = (
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'build', 'static')]
 MEDIA_ROOT = os.path.join(BASE_DIR, 'build', 'uploads')
-MEDIA_URL = '/media/'
+MEDIA_URL = '/uploads/'
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

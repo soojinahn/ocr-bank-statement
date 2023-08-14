@@ -8,7 +8,11 @@ function App() {
       <header className="App-header">
       </header>
       <FileUpload />
+      <div>
+
+      </div>
     </div>
+
   );
 }
 

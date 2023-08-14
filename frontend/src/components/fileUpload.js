@@ -1,46 +1,68 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
+import ImageCrop from './imageCrop';
 
 function FileUpload() {
-    const [selectedFile, setSelectedFile] = useState(null);
-    const [newImage, setNewImage] = useState(null);
+    const [croppedImage, setCroppedImage] = useState(null);
 
-    const handleFileChange = e => {
-        if(e.target.files) {
-            setSelectedFile(e.target.files[0]);
+    // helper function: generate a new file from base64 String
+    const b64toBlob = (b64Data, contentType='', sliceSize=512) => {
+        const arr = b64Data.split(',');
+        const byteCharacters = atob(arr[1]);
+        const byteArrays = [];
+      
+        for (let offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+          const slice = byteCharacters.slice(offset, offset + sliceSize);
+      
+          const byteNumbers = new Array(slice.length);
+          for (let i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+          }
+      
+          const byteArray = new Uint8Array(byteNumbers);
+          byteArrays.push(byteArray);
         }
+      
+        const blob = new Blob(byteArrays, {type: contentType});
+        return blob;
+      }
+
+    const handleCropUpload = obj => { //takes obj from ImageCrop as parameter
+        setCroppedImage(img => (obj));
     };
 
-    function handleUpload(){
-        const formData = new FormData();
-        formData.append("document", selectedFile);
-    
-        axios({
-            method: "post",
-            url: "/image",
-            data: formData,
-            headers: {"Content-Type": "multipart/form-data"},
-        })
-            .then(function (response) {
-                console.log(response)
+    useEffect(() => {
+        if(croppedImage) {
+            const formData = new FormData();
+            const img = b64toBlob(croppedImage, "image/png"); //convert base64 to BLOB
+            formData.append("image", img);
+        
+            axios({
+                method: "post",
+                url: "/image",
+                data: formData,
+                headers: {"Content-Type": "multipart/form-data"},
             })
-            .catch(function (error) {
-                console.log(error)
-            });
-    }
+                .then(function (response) {
+                    console.log(response)
+                })
+                .catch(function (error) {
+                    console.log(error)
+                });
+        }
+    }, [croppedImage]);
 
     return (
         <div>
-            <form>
-            <input type="file" accept=".pdf, image/*" onChange={handleFileChange} />
-            <div>{selectedFile && `${selectedFile.name}`}</div>
-            <button onClick={handleUpload}>Upload</button>
-            </form>
+            <ImageCrop handleCropUpload={handleCropUpload}/>
+            <div className="idk">
+                {croppedImage ? (
+                    <img src={croppedImage}/>
+                ): null}
+            </div>
         </div>
-
     );
 }
-
 
 export default FileUpload;
