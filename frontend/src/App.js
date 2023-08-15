@@ -1,5 +1,5 @@
 import './App.css';
-import FileUpload from './components/fileUpload';
+import ImageCrop from './components/imageCrop';
 
 function App() {
 
@@ -7,9 +7,8 @@ function App() {
     <div className="App">
       <header className="App-header">
       </header>
-      <FileUpload />
+      <ImageCrop />
       <div>
-
       </div>
     </div>
 
