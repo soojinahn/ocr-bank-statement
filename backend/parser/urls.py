@@ -18,12 +18,12 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, re_path
-from bank_statement.views import render_react, process_image
+from bank_statement.views import render_react, upload_image
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("", render_react, name="react"),
-    path('image', process_image, name='image'),
+    path('image', upload_image, name='image'),
 ]
 
 if settings.DEBUG:

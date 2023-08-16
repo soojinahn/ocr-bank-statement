@@ -12,9 +12,10 @@ function ImageCrop(props) {
         const cropper = imageElement?.cropper;
 
         cropper.getCroppedCanvas().toBlob((blob) => {
+            const image_file = new File([blob], "image_01.png", {type:"image/png"});
             const formData = new FormData();
-            formData.append("image", blob);
-        
+            formData.append("image", image_file);
+            
             axios({
                 method: "post",
                 url: "/image",
