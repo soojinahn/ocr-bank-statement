@@ -15,7 +15,7 @@ function ImageCrop(props) {
             const image_file = new File([blob], "image_01.png", {type:"image/png"});
             const formData = new FormData();
             formData.append("image", image_file);
-            
+
             axios({
                 method: "post",
                 url: "/image",
@@ -32,9 +32,24 @@ function ImageCrop(props) {
         );
     };
 
+    function handleFileUpload(file) {
+
+        setInputImage(file);
+        // const validImage = new RegExp('image/.*');
+        // image_url = URL.createObjectURL(e.target.files[0]);
+
+        // console.log(file.type);
+        // if(file.type == "application/pdf") {
+        //     PDFConverter
+        // }
+        // else if (validImage.test(file.type)) {
+        //     setInputImage(image_url)
+        // }
+    }
+
     return (
         <div>
-            <input type="file" accept="image/*" onChange={(e) => setInputImage(URL.createObjectURL(e.target.files[0]))} />
+            <input type="file" accept="image/*,.pdf" onChange={(e) => handleFileUpload(e.target.files[0])} />
             <Cropper 
                 src={inputImage}
                 ref={cropperRef}
