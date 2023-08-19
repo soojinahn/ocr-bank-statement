@@ -7,8 +7,8 @@ from django.core.files.storage import FileSystemStorage
 from PIL import Image
 import os
 
-headers = []
-text = []
+headers = [ "Date","Amount", "Description"]
+body = [["8/3", "8/12", "8/16"], ["$20", "$5", "$30"], ["Coupang", "Starbucks", "Owala"]]
 
 def render_react(request):
     context = { }
@@ -26,16 +26,24 @@ def upload_image(request):
             cwd = os.getcwd()
             image_path = cwd+"/build"+fileurl
 
-            print(call_ocr(image_path))
+            call_ocr(image_path)
             return Response("Successfully received.", status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def set_heading(request):
     if request.method == 'POST':
         new_header = request.POST['heading']
-        headers.append(new_header)
         return Response("Successfully received.", status=status.HTTP_200_OK)
+    
+@api_view(['GET'])
+def return_table(request):
+    if request.method == 'GET':
+        #transaction_data = dict(map(lambda i: (headers[i], body[i]), range(len(headers))))
+        return Response(data={"headers":headers, "body":body}, status=status.HTTP_200_OK)
     
 def call_ocr(image_path):
     text = str(pytesseract.image_to_string(Image.open(image_path)))
-    return text
+    text = text.strip().splitlines()
+    text = list(filter(lambda x: x!="", text)) #removes empty strings
+    print(text)
+    #current status: successfully calls ocr and makes a list of text extracted

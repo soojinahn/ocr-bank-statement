@@ -1,11 +1,14 @@
 import { useState, useRef } from "react";
 import Cropper from "react-cropper";
+import Table from './table';
 import "cropperjs/dist/cropper.css";
 import axios from 'axios';
 
 function ImageCrop(props) {
     const cropperRef = useRef(null); 
     const [inputImage, setInputImage] = useState(null); //user-uploaded image
+    const [tableData, setTableData] = useState([]);
+    const [tableHeaders, setTableHeaders] = useState([]);
 
     function handleCropUpload() {
         const imageElement = cropperRef?.current;
@@ -28,13 +31,24 @@ function ImageCrop(props) {
                 .catch(function (error) {
                     console.log(error)
                 });
-            }
-        );
+        });
+
+        axios({
+            method: "get",
+            url: "/table"
+        })
+            .then(function (response) {
+                setTableData(response.data["body"]);
+                setTableHeaders(response.data["headers"]);
+            })
+            .catch(function (error) {
+                console.log(error)
+            });
     };
 
     function handleFileUpload(file) {
 
-        setInputImage(file);
+        setInputImage(URL.createObjectURL(file));
         // const validImage = new RegExp('image/.*');
         // image_url = URL.createObjectURL(e.target.files[0]);
 
@@ -60,6 +74,7 @@ function ImageCrop(props) {
                 autoCrop={true}
             />
             <button onClick={handleCropUpload}>Crop</button>
+            <Table items={tableData} headers={tableHeaders}/>
         </div>
     );
 }
