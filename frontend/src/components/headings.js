@@ -6,7 +6,9 @@ function Headings() {
     const form = new FormData();
     form.append('heading', input);
 
-    function handleSubmit() {
+    function handleSubmit(e) {
+        e.preventDefault();
+
         axios({
             url:'/heading',
             method: 'post',
@@ -18,7 +20,7 @@ function Headings() {
  
     return(
         <div>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={(e) => handleSubmit(e)}>
                 <label>Enter desired heading:
                     <input type="text" onChange={(e) => setInput(e.target.value)}/>
                 </label>

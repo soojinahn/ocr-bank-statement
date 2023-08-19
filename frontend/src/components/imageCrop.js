@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import Cropper from "react-cropper";
 import Table from './table';
 import "cropperjs/dist/cropper.css";
@@ -9,8 +9,10 @@ function ImageCrop(props) {
     const [inputImage, setInputImage] = useState(null); //user-uploaded image
     const [tableData, setTableData] = useState([]);
     const [tableHeaders, setTableHeaders] = useState([]);
-
-    function handleCropUpload() {
+ 
+    function handleCropUpload(e) {
+        e.preventDefault();
+        
         const imageElement = cropperRef?.current;
         const cropper = imageElement?.cropper;
 
@@ -27,23 +29,23 @@ function ImageCrop(props) {
             })
                 .then(function (response) {
                     console.log(response)
+                    axios({
+                        method: "get",
+                        url: "/table"
+                    })
+                        .then(function (response) {
+                            console.log(response)
+                            setTableHeaders(response.data["headers"]);
+                            setTableData(response.data["body"]);
+                        })
+                        .catch(function (error) {
+                            console.log(error)
+                        });
                 })
                 .catch(function (error) {
                     console.log(error)
                 });
         });
-
-        axios({
-            method: "get",
-            url: "/table"
-        })
-            .then(function (response) {
-                setTableData(response.data["body"]);
-                setTableHeaders(response.data["headers"]);
-            })
-            .catch(function (error) {
-                console.log(error)
-            });
     };
 
     function handleFileUpload(file) {
@@ -52,7 +54,6 @@ function ImageCrop(props) {
         // const validImage = new RegExp('image/.*');
         // image_url = URL.createObjectURL(e.target.files[0]);
 
-        // console.log(file.type);
         // if(file.type == "application/pdf") {
         //     PDFConverter
         // }
@@ -73,7 +74,7 @@ function ImageCrop(props) {
                 background={false}
                 autoCrop={true}
             />
-            <button onClick={handleCropUpload}>Crop</button>
+            <button onClick={(e) => handleCropUpload(e)}>Crop</button>
             <Table items={tableData} headers={tableHeaders}/>
         </div>
     );
