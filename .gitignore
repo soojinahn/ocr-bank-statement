@@ -10,6 +10,7 @@ migrations/
 Scripts/
 Lib/
 pyvenv.cfg
+staticfiles
 
 #------React------#
 node_modules
